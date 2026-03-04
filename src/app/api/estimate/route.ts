@@ -1,8 +1,5 @@
-import Anthropic from '@anthropic-ai/sdk';
 import { NextRequest, NextResponse } from 'next/server';
 import { ClaudeEstimateResponseSchema } from '@/lib/types';
-
-const client = new Anthropic();
 
 const SYSTEM_PROMPT = `You are a protein estimation assistant. The user will describe food they ate in natural language. Your job is to:
 
@@ -49,21 +46,40 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const message = await client.messages.create({
-      model: 'claude-haiku-4-5-20250929',
-      max_tokens: 1024,
-      system: SYSTEM_PROMPT,
-      messages: [
-        { role: 'user', content: description.trim() }
-      ],
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: description.trim() },
+        ],
+        temperature: 0.1,
+        max_tokens: 1024,
+      }),
     });
 
-    const textBlock = message.content.find(block => block.type === 'text');
-    if (!textBlock || textBlock.type !== 'text') {
-      throw new Error('No text response from Claude');
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('Groq API error:', response.status, errorData);
+      throw new Error(`Groq API error: ${response.status}`);
     }
 
-    const parsed = JSON.parse(textBlock.text);
+    const data = await response.json();
+    const text = data.choices[0]?.message?.content;
+
+    if (!text) {
+      throw new Error('No text response from Groq');
+    }
+
+    // Strip markdown code fences if present
+    const cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+    const parsed = JSON.parse(cleaned);
     const validated = ClaudeEstimateResponseSchema.parse(parsed);
 
     return NextResponse.json(validated);
