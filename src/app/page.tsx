@@ -17,6 +17,13 @@ export default function DashboardPage() {
 
   useEffect(() => {
     setMounted(true);
+
+    // Register service worker for PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js').catch(() => {
+        // Service worker registration failed — not critical
+      });
+    }
   }, []);
 
   useEffect(() => {

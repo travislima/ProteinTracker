@@ -15,12 +15,23 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Protein Tracker",
   description: "Simple daily protein tracking with AI",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Protein Tracker",
+  },
+  icons: {
+    icon: "/icons/icon-192x192.png",
+    apple: "/icons/apple-touch-icon.png",
+  },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+  themeColor: "#10b981",
 };
 
 export default function RootLayout({
