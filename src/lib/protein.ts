@@ -23,6 +23,10 @@ export function calculateDailyTotal(entries: FoodEntry[]): number {
   return entries.reduce((sum, e) => sum + e.protein, 0);
 }
 
+export function calculateDailyCalories(entries: FoodEntry[]): number {
+  return entries.reduce((sum, e) => sum + (e.calories || 0), 0);
+}
+
 export function getGoalPercentage(current: number, goal: number): number {
   if (goal <= 0) return 0;
   return Math.min(Math.round((current / goal) * 100), 100);

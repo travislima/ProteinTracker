@@ -1,31 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ClaudeEstimateResponseSchema } from '@/lib/types';
 
-const SYSTEM_PROMPT = `You are a protein estimation assistant. The user will describe food they ate in natural language. Your job is to:
+const SYSTEM_PROMPT = `You are a nutrition estimation assistant. The user will describe food they ate in natural language. Your job is to:
 
 1. Parse the food description into individual food items
-2. Estimate the protein content in grams for each item
+2. Estimate the protein content in grams and calorie count for each item
 3. Provide a confidence level for each estimate
 
 Rules:
 - Use standard serving sizes unless the user specifies quantities
-- "a chicken breast" = ~31g protein (6oz cooked breast)
-- "an egg" = ~6g protein
-- "a glass of milk" = ~8g protein
-- "Greek yogurt" = ~15g protein (per cup)
-- "a protein bar" = ~20g protein
-- "a slice of bread/toast" = ~3g protein
-- Be conservative with estimates — round to nearest whole gram
+- "a chicken breast" = ~31g protein, ~280 cal (6oz cooked breast)
+- "an egg" = ~6g protein, ~78 cal
+- "a glass of milk" = ~8g protein, ~150 cal
+- "Greek yogurt" = ~15g protein, ~130 cal (per cup)
+- "a protein bar" = ~20g protein, ~200 cal
+- "a slice of bread/toast" = ~3g protein, ~80 cal
+- Be conservative with estimates — round to nearest whole number
 - If the description is ambiguous (e.g., "some chicken"), use a medium serving and mark confidence as "medium"
-- If you cannot identify a food item, still include it with 0g protein and "low" confidence
+- If you cannot identify a food item, still include it with 0g protein, 0 calories and "low" confidence
 - Always respond with valid JSON matching the schema exactly
 
 Respond ONLY with JSON in this exact format, no other text:
 {
   "foods": [
-    { "name": "Food Name", "protein_grams": 25, "confidence": "high" }
+    { "name": "Food Name", "protein_grams": 25, "calories": 280, "confidence": "high" }
   ],
-  "total_protein": 25
+  "total_protein": 25,
+  "total_calories": 280
 }`;
 
 export async function POST(request: NextRequest) {

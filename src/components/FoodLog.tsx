@@ -50,7 +50,12 @@ export function FoodLog({ entries, onDelete }: FoodLogProps) {
               <span className={`shrink-0 text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md ${confidenceBadge[entry.confidence]}`}>
                 {entry.protein}g
               </span>
-              <span className="text-gray-700 dark:text-gray-300 truncate">{entry.food}</span>
+              <div className="min-w-0">
+                <span className="text-gray-700 dark:text-gray-300 truncate block">{entry.food}</span>
+                {entry.calories > 0 && (
+                  <span className="text-xs text-gray-400 dark:text-gray-500">{entry.calories} cal</span>
+                )}
+              </div>
             </div>
             <button
               onClick={() => onDelete(entry.id)}

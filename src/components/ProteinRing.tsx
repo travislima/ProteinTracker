@@ -5,9 +5,10 @@ import { getGoalPercentage } from '@/lib/protein';
 interface ProteinRingProps {
   current: number;
   goal: number;
+  calories?: number;
 }
 
-export function ProteinRing({ current, goal }: ProteinRingProps) {
+export function ProteinRing({ current, goal, calories }: ProteinRingProps) {
   const percentage = getGoalPercentage(current, goal);
   const radius = 54;
   const strokeWidth = 10;
@@ -77,6 +78,13 @@ export function ProteinRing({ current, goal }: ProteinRingProps) {
       ) : (
         <p className="text-sm text-gray-400 dark:text-gray-500">
           {remaining}g remaining
+        </p>
+      )}
+
+      {/* Calorie summary */}
+      {calories !== undefined && calories > 0 && (
+        <p className="text-sm text-gray-400 dark:text-gray-500 font-medium">
+          {calories.toLocaleString()} cal today
         </p>
       )}
     </div>

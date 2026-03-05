@@ -12,6 +12,7 @@ export const FoodEntrySchema = z.object({
   date: z.string(),
   food: z.string(),
   protein: z.number(),
+  calories: z.number().default(0),
   confidence: z.enum(['high', 'medium', 'low']),
   timestamp: z.number(),
 });
@@ -29,9 +30,11 @@ export const ClaudeEstimateResponseSchema = z.object({
   foods: z.array(z.object({
     name: z.string(),
     protein_grams: z.number(),
+    calories: z.number(),
     confidence: z.enum(['high', 'medium', 'low']),
   })),
   total_protein: z.number(),
+  total_calories: z.number(),
 });
 
 export type ClaudeEstimateResponse = z.infer<typeof ClaudeEstimateResponseSchema>;

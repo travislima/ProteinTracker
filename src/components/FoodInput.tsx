@@ -49,6 +49,7 @@ export function FoodInput({ onEntriesAdded }: FoodInputProps) {
         date: today,
         food: food.name,
         protein: food.protein_grams,
+        calories: food.calories,
         confidence: food.confidence,
         timestamp: Date.now(),
       }));

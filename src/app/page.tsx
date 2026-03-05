@@ -7,7 +7,7 @@ import { ProteinRing } from '@/components/ProteinRing';
 import { FoodInput } from '@/components/FoodInput';
 import { FoodLog } from '@/components/FoodLog';
 import { ActivityGrid } from '@/components/ActivityGrid';
-import { getTodayDateString, calculateDailyTotal } from '@/lib/protein';
+import { getTodayDateString, calculateDailyTotal, calculateDailyCalories } from '@/lib/protein';
 import type { FoodEntry } from '@/lib/types';
 
 export default function DashboardPage() {
@@ -36,6 +36,7 @@ export default function DashboardPage() {
   const today = getTodayDateString();
   const todayEntries = data.entries.filter(e => e.date === today);
   const dailyTotal = calculateDailyTotal(todayEntries);
+  const dailyCalories = calculateDailyCalories(todayEntries);
 
   function handleEntriesAdded(entries: FoodEntry[]) {
     updateData(prev => ({
@@ -83,7 +84,7 @@ export default function DashboardPage() {
       </header>
 
       {/* Progress Ring */}
-      <ProteinRing current={dailyTotal} goal={data.profile.goal} />
+      <ProteinRing current={dailyTotal} goal={data.profile.goal} calories={dailyCalories} />
 
       {/* Input */}
       <FoodInput onEntriesAdded={handleEntriesAdded} />
